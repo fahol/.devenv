@@ -1,0 +1,187 @@
+" Generic
+set encoding=utf-8
+syntax on
+set clipboard=unnamed
+set tags=tags
+
+" -------------------------------------------------------------------------------------
+" Vundle based plugin management
+" Adopted from - https://realpython.com/blog/python/vim-and-python-a-match-made-in-heaven/
+set nocompatible              " required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+Plugin 'gmarik/Vundle.vim'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+"Plugin 'scrooloose/syntastic'
+"Plugin 'nvie/vim-flake8'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'mrk21/yaml-vim'
+
+" -- https://github.com/vhda/verilog_systemverilog.vim
+Plugin 'vhda/verilog_systemverilog.vim'
+
+" --- CTRL+P Finding everything - https://www.youtube.com/watch?v=9XrHk3xjYsw
+" -- https://github.com/ctrlpvim/ctrlp.vim 
+Plugin 'kien/ctrlp.vim'
+
+" --- Git wrapper - http://vimcasts.org/episodes/fugitive-vim---a-complement-to-command-line-git/
+Plugin 'tpope/vim-fugitive'
+
+" --- Go
+Plugin 'fatih/vim-go'
+
+" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+" -------------------------------------------------------------------------------------
+" C Editing
+cs add ./
+cs reset
+set cst
+set cindent
+set cino=(0
+autocmd BufReadPre *.c set shiftwidth=8 tabstop=8 cindent textwidth=79 fileformat=unix
+autocmd BufReadPre *.h set shiftwidth=8 tabstop=8 cindent textwidth=79 fileformat=unix
+
+" -------------------------------------------------------------------------------------
+" Python tab based on PEP8
+autocmd BufNewFile,BufRead *.tex set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+
+" -------------------------------------------------------------------------------------
+" Python tab based on PEP8
+autocmd BufNewFile,BufRead *.bzl set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+autocmd BufNewFile,BufRead *.bazel set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+autocmd BufNewFile,BufRead WORKSPACE set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+autocmd BufNewFile,BufRead BUILD set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+autocmd BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+set foldmethod=indent
+set foldlevel=99
+let g:SimpylFold_docstring_preview=1
+let python_highlight_all=1
+nnoremap <space> za
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+
+
+" -------------------------------------------------------------------------------------
+" System verilog specific settings
+autocmd BufRead,BufNewFile *.v,*.vh setfiletype verilog
+autocmd BufRead,BufNewFile *.v,*.vh set expandtab tabstop=4 softtabstop=4 shiftwidth=4
+autocmd BufRead,BufNewFile *.sv,*.svi set filetype=verilog_systemverilog
+autocmd BufRead,BufNewFile *.sv,*.svi set expandtab tabstop=4 softtabstop=4 shiftwidth=4
+
+" autocmd BufRead,BufNewFile *.v,*.vh setfiletype verilog
+" autocmd BufRead,BufNewFile *.v,*.vh set expandtab tabstop=4 softtabstop=2 shiftwidth=2
+" autocmd BufRead,BufNewFile *.sv,*.svi set filetype=verilog_systemverilog
+" autocmd BufRead,BufNewFile *.sv,*.svi set expandtab tabstop=4 softtabstop=2 shiftwidth=2
+
+" Omnifunc
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
+
+" Matchit
+runtime macros/matchit.vim
+
+" -------------------------------------------------------------------------------------
+" Other language bindings
+autocmd BufNewFile,BufRead *.md set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+autocmd BufNewFile,BufRead *.rst setfiletype rst
+autocmd BufNewFile,BufRead *.js, *.html, *.css set tabstop=2 softtabstop=2 shiftwidth=2 
+
+" -------------------------------------------------------------------------------------
+" Key bindings
+map <S-h> 0
+map <S-l> $
+
+map <F4> :!cscope -bR<CR>:cs reset<CR>
+map <F5> :!ctags -R<CR>
+
+map <F8> :make<CR>
+
+"map <C-n><C-n> :set invnumber<CR>
+map <C-k> <C-W>-
+map <C-j> <C-W>+
+map <C-h> <C-W><
+map <C-l> <C-W>>
+
+" Go key bindings and settings
+" https://github.com/fatih/vim-go/wiki/Tutorial
+let mapleader = ","
+set autowrite
+
+map <C-n> :cnext<CR>
+map <C-m> :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+autocmd FileType go nmap <leader>b <Plug>(go-build)
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+autocmd FileType go nmap <Leader>f <Plug>(go-decls-dir)
+autocmd FileType go nmap <Leader>d <Plug>(go-decls)
+
+autocmd FileType go nmap <Leader>R <Plug>(go-referrers)
+autocmd FileType go nmap <Leader>L <Plug>(go-callers)
+autocmd FileType go nmap <Leader>l <Plug>(go-callees)
+autocmd FileType go nmap <Leader>C <Plug>(go-channel-peers)
+
+let g:go_list_type = "quickfix"
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_auto_sameids = 0
+" let g:go_guru_scope = ["..."]
+" let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+" let g:go_metalinter_autosave = 0
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+
+" AutoCompletion with the dot
+au filetype go inoremap <buffer> . .<C-x><C-o>
+
+
+" -------------------------------------------------------------------------------------
+" NERDTrue
+map <C-z> :NERDTreeToggle<CR> “ Toggle side window with `CTRL+z`.
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+let NERDTreeShowHidden=1 “ Show hidden files
+
+" -------------------------------------------------------------------------------------
+" Taglist options
+"map <C-.> :TlistToggle<CR>
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_Show_One_File = 1
+
+" -------------------------------------------------------------------------------------
+" Easy grep options
+"let EasyGrepMode=1
+
+" Yaml settings
+" ----------------------------------------------------------------------
+" https://dzone.com/articles/vim-settings-for-working-with-yaml-snippet
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+" ----------------------------------------------------------------------
+" Be easy on the eyes when doing vimdiff
+highlight! link DiffText MatchParen
